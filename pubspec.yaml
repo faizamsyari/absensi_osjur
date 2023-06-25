@@ -1,0 +1,46 @@
+name: absensi_osjur
+version: 1.0.0+1
+publish_to: none
+description: A new Flutter project.
+environment: 
+  sdk: '>=2.19.4 <3.0.0'
+
+dependencies: 
+  cupertino_icons: ^1.0.2
+  get: 4.6.5
+  firebase_core: 2.11.0
+  cloud_firestore: 4.4.5
+  firebase_auth: 4.3.0
+  dio: 5.0.3
+  flutter_barcode_scanner: 2.0.0
+  qr_flutter: 4.0.0
+  geolocator: 9.0.2
+  geocoding: 2.1.0
+  intl: 0.17.0
+  open_file: 3.2.0
+  path_provider: 2.0.13
+  pdf: 3.3.0
+  flutter_launcher_icons: 0.11.0
+  flutter: 
+    sdk: flutter
+  gsheets: ^0.4.1
+  dropdown_search: ^5.0.6
+  animated_bottom_navigation_bar: ^1.2.0
+
+dev_dependencies: 
+  flutter_lints: 2.0.1
+  flutter_test: 
+    sdk: flutter
+
+flutter: 
+  assets: 
+    - images/
+  uses-material-design: true
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "images/logo.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+ 
+

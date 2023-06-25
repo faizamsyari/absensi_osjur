@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "17056414326",
+    "project_id": "absensiosjur",
+    "storage_bucket": "absensiosjur.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17056414326:android:832e5cfb7bee5696007d57",
+        "android_client_info": {
+          "package_name": "com.absensi.absensi_osjur"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "17056414326-b9a31cajkkpb5jmempuodp6nqv0c8qbk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuE2A_UWvZfpSxe1H_8nOPws7VoyRV32c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "17056414326-b9a31cajkkpb5jmempuodp6nqv0c8qbk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "17056414326-t1jr2jl3a1cad0033g7brsv68us5rl1j.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.absensi.absensiOsjur"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
