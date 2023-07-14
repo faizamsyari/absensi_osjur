@@ -19,6 +19,10 @@ class HomeController extends GetxController {
     await auth.signOut();
   }
 
+  Stream<QuerySnapshot<Map<String, dynamic>>> rekapData() async* {
+    yield* firestore.collection("rekapan").snapshots();
+  }
+
   void downloadPdf() async {
     //
     final pdf = pw.Document();

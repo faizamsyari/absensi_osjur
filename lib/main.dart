@@ -19,28 +19,17 @@ void main() async {
   Get.put(HalamanUtamaController(), permanent: true);
   Get.put(BottomNavController(), permanent: true);
 
-  runApp(StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const MaterialApp(
-            home: Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
-          );
-        }
-        // return GetMaterialApp(
-        //   debugShowCheckedModeBanner: false,
-        //   title: "House Pay",
-        //   initialRoute: Routes.END_TRANSACTION,
-        //   getPages: AppPages.routes,
-        // );
-        return StreamBuilder(
-          stream: BlankPageeController().userRole(),
-          builder: (context, snap) {
-            if (snap.connectionState == ConnectionState.waiting) {
+  runApp(
+      //   GetMaterialApp(
+      //   debugShowCheckedModeBanner: false,
+      //   title: "House Pay",
+      //   initialRoute: Routes.HOME,
+      //   getPages: AppPages.routes,
+      // ));
+      StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
               return const MaterialApp(
                 home: Scaffold(
                   body: Center(
@@ -48,27 +37,45 @@ void main() async {
                   ),
                 ),
               );
-            } else {
-              print(snap.data);
-              return GetMaterialApp(
-                debugShowCheckedModeBanner: false,
-                title: "ABSENSI PKJT",
-                initialRoute: snapshot.data != null &&
-                        snap.data!.data()!["role"] == "client"
-                    ? Routes.BOTTOM_NAV
-                    : snapshot.data != null &&
-                            snap.data!.data()!["role"] == "panitia"
+            }
+            // return GetMaterialApp(
+            //   debugShowCheckedModeBanner: false,
+            //   title: "House Pay",
+            //   initialRoute: Routes.END_TRANSACTION,
+            //   getPages: AppPages.routes,
+            // );
+            return StreamBuilder(
+              stream: BlankPageeController().userRole(),
+              builder: (context, snap) {
+                if (snap.connectionState == ConnectionState.waiting) {
+                  return const MaterialApp(
+                    home: Scaffold(
+                      body: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  );
+                } else {
+                  print(snap.data);
+                  return GetMaterialApp(
+                    debugShowCheckedModeBanner: false,
+                    title: "ABSENSI PKJT",
+                    initialRoute: snapshot.data != null &&
+                            snap.data!.data()!["role"] == "client"
                         ? Routes.BOTTOM_NAV
                         : snapshot.data != null &&
-                                snap.data!.data()!["role"] == "admin"
-                            ? Routes.HOME
-                            : snapshot.data == null
-                                ? Routes.LOGIN
-                                : Routes.LOGIN,
-                getPages: AppPages.routes,
-              );
-            }
-          },
-        );
-      }));
+                                snap.data!.data()!["role"] == "panitia"
+                            ? Routes.BOTTOM_NAV
+                            : snapshot.data != null &&
+                                    snap.data!.data()!["role"] == "admin"
+                                ? Routes.HOME
+                                : snapshot.data == null
+                                    ? Routes.LOGIN
+                                    : Routes.LOGIN,
+                    getPages: AppPages.routes,
+                  );
+                }
+              },
+            );
+          }));
 }

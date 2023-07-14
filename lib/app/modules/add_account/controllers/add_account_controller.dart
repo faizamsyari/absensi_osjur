@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 
 class AddAccountController extends GetxController {
   RxBool loading = false.obs;
-  RxString? role = "".obs;
+  RxString? role = "a".obs;
 
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -22,35 +22,48 @@ class AddAccountController extends GetxController {
   void addaccount() async {
     loading.value = true;
     if (email.text.isNotEmpty &&
-            password.text.isNotEmpty &&
-            role != null &&
-            nama.text.isNotEmpty &&
-            role?.value == "Peserta"
-        ? alamat.text.isNotEmpty
-        : alamat.text.isEmpty) {
-      print("FUNGSI ADD ACCOUNT DIJALANKAN");
-      final dio = Dio();
-      if (role?.value == "Peserta") {
-        var hasilpost = await dio
-            .post("https://kind-plum-ostrich-kilt.cyclic.app/create", data: {
-          "email": email.text,
-          "password": password.text,
-          "nama": nama.text,
-          "nim": password.text,
-          "alamat": int.parse(alamat.text),
-          "role": role?.value == "Peserta" ? "client" : "panitia"
-        });
-        loading.value = false;
-        print(hasilpost.runtimeType);
+        password.text.isNotEmpty &&
+        nama.text.isNotEmpty) {
+      if (role?.value == "a") {
+        print("DATA JABATAN KOSONG");
+        Get.snackbar("Terjadi Kesalahan", "Data Tidak Boleh Kosong");
+      } else if (role?.value == "Peserta") {
+        print("INI DATA PESERTA");
+        if (alamat.text.isNotEmpty) {
+          print("FUNGSI ADD ACCOUNT DIJALANKAN");
+          print("INI ROLE ACCOUNT${role?.value}");
+          final dio = Dio();
+          if (role?.value == "Peserta") {
+            var hasilpost = await dio.post(
+                "https://kind-plum-ostrich-kilt.cyclic.app/create",
+                data: {
+                  "email": email.text,
+                  "password": password.text,
+                  "nama": nama.text,
+                  "nim": password.text,
+                  "alamat": int.parse(alamat.text),
+                  "role": role?.value == "Peserta" ? "client" : "panitia"
+                });
+            loading.value = false;
+            print(hasilpost.runtimeType);
 
-        if (hasilpost.toString() == "Data Berhasil Didaftarkan") {
-          Get.back();
-          Get.snackbar("Selamat", "Akun Berhasil Ditambahkan");
+            if (hasilpost.toString() == "Data Berhasil Didaftarkan") {
+              Get.back();
+              Get.snackbar("Selamat", "Akun Berhasil Ditambahkan");
+            } else {
+              print("object");
+              Get.snackbar("Terjadi Kesalahan", hasilpost.toString());
+            }
+          }
         } else {
-          print("object");
-          Get.snackbar("Terjadi Kesalahan", hasilpost.toString());
+          Get.snackbar("TERJADI KESALAHAN", "DATA TIDAK BOLEH KOSONG");
         }
-      } else {
+      } else if (role?.value == "Panitia") {
+        print("INI UNTUK PANITIA");
+        print("FUNGSI ADD ACCOUNT DIJALANKAN");
+        print("INI ROLE ACCOUNT${role?.value}");
+        final dio = Dio();
+
         var hasilpost = await dio
             .post("https://kind-plum-ostrich-kilt.cyclic.app/create", data: {
           "email": email.text,
@@ -77,6 +90,7 @@ class AddAccountController extends GetxController {
         loading.value = false;
         print(loading.value);
       });
+      print("INI ADALAH:${role?.value}");
       Get.snackbar("Terjadi Kesalahan", "Data Tidak Boleh Kosong");
     }
   }

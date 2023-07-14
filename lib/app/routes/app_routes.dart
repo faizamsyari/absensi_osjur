@@ -14,6 +14,9 @@ abstract class Routes {
   static const HALAMAN_UTAMA = _Paths.HALAMAN_UTAMA;
   static const BOTTOM_NAV = _Paths.BOTTOM_NAV;
   static const PROFILE = _Paths.PROFILE;
+  static const PERIZINAN = _Paths.PERIZINAN;
+  static const CHOOSEPERIZINAN = _Paths.CHOOSEPERIZINAN;
+  static const CHART = _Paths.CHART;
 }
 
 abstract class _Paths {
@@ -29,4 +32,7 @@ abstract class _Paths {
   static const HALAMAN_UTAMA = '/halaman-utama';
   static const BOTTOM_NAV = '/bottom-nav';
   static const PROFILE = '/profile';
+  static const PERIZINAN = '/perizinan';
+  static const CHOOSEPERIZINAN = '/chooseperizinan';
+  static const CHART = '/chart';
 }

@@ -2,6 +2,8 @@ import 'package:absensi_osjur/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -11,27 +13,22 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     final lebar = MediaQuery.of(context).size.width;
     final tinggi = MediaQuery.of(context).size.height;
+
+    // final List<chartSakit> chartS = [];
     return SafeArea(
       child: Scaffold(
         body: ListView(
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.only(top: tinggi / 10, left: lebar / 20),
-              child: const Text(
-                "Selamat Data Di Menu!!!",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25,
-                    color: Colors.black),
-              ),
+            SizedBox(
+              height: tinggi / 20,
             ),
             GridView.builder(
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               padding: EdgeInsets.symmetric(
                   vertical: tinggi / 20, horizontal: lebar / 20),
-              itemCount: 4,
+              itemCount: 5,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: lebar / 20,
@@ -61,6 +58,11 @@ class HomeView extends GetView<HomeController> {
                     icon = Icons.edit_document;
 
                     break;
+                  case 4:
+                    title = "Lihat Grafik Rekapan Data";
+                    icon = Icons.line_axis_outlined;
+
+                    break;
                 }
                 return Material(
                   borderRadius: BorderRadius.circular(15),
@@ -78,11 +80,11 @@ class HomeView extends GetView<HomeController> {
                         controller.downloadPdf();
                       } else if (index == 3) {
                         controller.downloadexcel();
+                      } else if (index == 4) {
+                        Get.toNamed(Routes.CHART);
                       }
                     },
                     child: Container(
-                      width: lebar / 20,
-                      height: tinggi / 20,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

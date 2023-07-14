@@ -15,7 +15,7 @@ class ReadPresenceView extends GetView<ReadPresenceController> {
     final lebar = MediaQuery.of(context).size.width;
     final tinggi = MediaQuery.of(context).size.height;
     Map<String, dynamic> argument = Get.arguments;
-    print(argument["id"]);
+    print("INI ARGUMENT READ PRESENCE ${argument["id"]}");
     return SafeArea(
       child: Scaffold(
           body: ListView(
@@ -101,7 +101,9 @@ class ReadPresenceView extends GetView<ReadPresenceController> {
                               height: tinggi / 80,
                             ),
                             Text(
-                              "${DateFormat.jms().format(DateTime.parse(data?["masuk"]!["date"]))}",
+                              data?["masuk"] == null
+                                  ? "-"
+                                  : "${DateFormat.jms().format(DateTime.parse(data?["masuk"]["date"]))}",
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
@@ -123,7 +125,7 @@ class ReadPresenceView extends GetView<ReadPresenceController> {
                             Text(
                               data?["keluar"]?["date"] == null
                                   ? "-"
-                                  : "${DateFormat.jms().format(DateTime.parse(data!["keluar"]!["date"]))}",
+                                  : "${DateFormat.jms().format(DateTime.parse(data?["keluar"]!["date"]))}",
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
@@ -168,6 +170,28 @@ class ReadPresenceView extends GetView<ReadPresenceController> {
                               data?["keluar"] == null
                                   ? "-"
                                   : "${data?["keluar"]["status"]}",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 14),
+                            ),
+                            SizedBox(
+                              height: tinggi / 70,
+                            ),
+                            const Text(
+                              "Status Kehadiran",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 14),
+                            ),
+                            SizedBox(
+                              height: tinggi / 80,
+                            ),
+                            Text(
+                              data?["Status"] == null
+                                  ? "-"
+                                  : "${data?["Status"]}",
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,

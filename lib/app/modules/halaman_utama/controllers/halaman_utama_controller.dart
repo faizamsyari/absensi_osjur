@@ -9,4 +9,16 @@ class HalamanUtamaController extends GetxController {
   void signout() async {
     await auth.signOut();
   }
+
+  Future<DocumentSnapshot<Map<String, dynamic>>> dataUser() async {
+    String uid = auth.currentUser!.uid;
+    print("DI BUILD ULANG NGABB");
+    return firestore.collection("Pengguna").doc(uid).get();
+  }
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> data() async* {
+    String uid = auth.currentUser!.uid;
+    print("DI BUILD ULANG NGABB");
+    yield* firestore.collection("Pengguna").doc(uid).snapshots();
+  }
 }

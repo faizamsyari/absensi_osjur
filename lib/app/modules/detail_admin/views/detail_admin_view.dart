@@ -65,8 +65,10 @@ class DetailAdminView extends GetView<DetailAdminController> {
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(15),
                                 onTap: (() {
-                                  Get.toNamed(Routes.READ_PRESENCE,
+                                  Get.toNamed(Routes.CHOOSEPERIZINAN,
                                       arguments: {"id": data?["id"]});
+                                  // Get.toNamed(Routes.READ_PRESENCE,
+                                  //     arguments: {"id": data?["id"]});
                                 }),
                                 child: Container(
                                     width: lebar,

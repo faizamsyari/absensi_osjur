@@ -93,191 +93,20 @@ class ClientController extends GetxController {
     print(datenow);
     print(cek.docs.length);
 
-    if (cek.docs.isEmpty) {
-      //belum pernah absen dan set absen masuk
-      if (convertnow >= convert) {
-        print("Anda Terlambat");
-        var absen = await firestore
-            .collection("Pengguna")
-            .doc(uid)
-            .collection("Presensi")
-            .doc(datenow)
-            .set({
-          "tanggal": now.toIso8601String(),
-          "nama": nama,
-          "nomor": nomor,
-          "role": statusjabatananda,
-          "nim": nim,
-          "email": email,
-          "idclient": uid,
-          "waktu": datenow,
-          "masuk": {
-            "date": now.toIso8601String(),
-            "latitude": position.latitude,
-            "longitude": position.longitude,
-            "status": "Terlambat Masuk"
-          }
-        });
-        var idadmin = await firestore.collection("Admin").add({
-          "nama": nama,
-          "nomor": nomor,
-          "role": statusjabatananda,
-          "email": email,
-          "nim": nim,
-          "tanggal": now.toIso8601String(),
-          "idclient": uid,
-          "waktu": datenow,
-          "masuk": {
-            "date": now.toIso8601String(),
-            "latitude": position.latitude,
-            "longitude": position.longitude,
-            "status": "Terlambat Masuk"
-          }
-        });
+    var cekkehadiran = await firestore
+        .collection("Pengguna")
+        .doc(uid)
+        .collection("Presensi")
+        .doc(datenow)
+        .get();
 
-        await firestore
-            .collection("Admin")
-            .doc(idadmin.id)
-            .update({"iddoc": idadmin.id});
-      } else {
-        print("ANDA ABSEN MASUK LEBIH AWAL");
-        var absen = await firestore
-            .collection("Pengguna")
-            .doc(uid)
-            .collection("Presensi")
-            .doc(datenow)
-            .set({
-          "nama": nama,
-          "nomor": nomor,
-          "role": statusjabatananda,
-          "nim": nim,
-          "email": email,
-          "tanggal": now.toIso8601String(),
-          "idclient": uid,
-          "waktu": datenow,
-          "masuk": {
-            "date": now.toIso8601String(),
-            "latitude": position.latitude,
-            "longitude": position.longitude,
-            "status": "Lebih Awal"
-          }
-        });
-        var idadmin = await firestore.collection("Admin").add({
-          "nama": nama,
-          "nomor": nomor,
-          "email": email,
-          "nim": nim,
-          "role": statusjabatananda,
-          "tanggal": now.toIso8601String(),
-          "idclient": uid,
-          "waktu": datenow,
-          "masuk": {
-            "date": now.toIso8601String(),
-            "latitude": position.latitude,
-            "longitude": position.longitude,
-            "status": "Lebih Awal"
-          }
-        });
-
-        await firestore
-            .collection("Admin")
-            .doc(idadmin.id)
-            .update({"iddoc": idadmin.id});
-      }
+    if (cekkehadiran.data()?["Status"] == "Sakit" ||
+        cekkehadiran.data()?["Status"] == "Izin") {
+      Get.snackbar(
+          "Terjadi Kesalahan", "ANDA TELAH DIIZINKAN DAN TIDAK PERLU ABSEN");
     } else {
-      print("Masuk Ke Else");
-      print(datenow);
-      DocumentSnapshot<Map<String, dynamic>> todayDocid = await firestore
-          .collection("Pengguna")
-          .doc(uid)
-          .collection("Presensi")
-          .doc(datenow)
-          .get();
-      print(todayDocid.exists);
-      if (todayDocid.exists == true) {
-        //tinggal absen keluar // sudah absen masuk dan keluar
-        Map<String, dynamic>? dataMapToday = todayDocid.data();
-        if (dataMapToday?["keluar"] != null) {
-          //sudah absen masuk dan keluar
-          Get.snackbar("Informasi", "Sudah Absen Masuk Dan Keluar");
-        } else {
-          // harus absen keluar
-          if (convertnow >= convertnw) {
-            print("INI CONVERT NOW ${convertnow}");
-            print("INI CONVERT NW ${convertnw}");
-            print("Absen Keluar Selesai");
-            await firestore
-                .collection("Pengguna")
-                .doc(uid)
-                .collection("Presensi")
-                .doc(datenow)
-                .update({
-              "tanggal": now.toIso8601String(),
-              "keluar": {
-                "date": now.toIso8601String(),
-                "latitude": position.latitude,
-                "longitude": position.longitude,
-                "status": "Sudah Absen"
-              }
-            });
-            var get = await firestore
-                .collection("Admin")
-                .where("idclient", isEqualTo: uid)
-                .where("waktu", isEqualTo: datenow)
-                .get();
-            print("ADA NGGAK ${get.docs.length}");
-            var bukaan = get.docs[0].data();
-            if (get.docs.length == 1) {
-              print("Satu");
-              await firestore.collection("Admin").doc(bukaan["iddoc"]).update({
-                "tanggal": now.toIso8601String(),
-                "keluar": {
-                  "date": now.toIso8601String(),
-                  "latitude": position.latitude,
-                  "longitude": position.longitude,
-                  "status": "Sudah Absen"
-                }
-              });
-            }
-          } else {
-            print("Absen Keluar Lebih Awal");
-            await firestore
-                .collection("Pengguna")
-                .doc(uid)
-                .collection("Presensi")
-                .doc(datenow)
-                .update({
-              "tanggal": now.toIso8601String(),
-              "keluar": {
-                "date": now.toIso8601String(),
-                "latitude": position.latitude,
-                "longitude": position.longitude,
-                "status": "Lebih Awal"
-              }
-            });
-            var get = await firestore
-                .collection("Admin")
-                .where("idclient", isEqualTo: uid)
-                .where("waktu", isEqualTo: datenow)
-                .get();
-            print("ADA NGGAK ${get.docs.length}");
-            var bukaan = get.docs[0].data();
-            if (get.docs.length == 1) {
-              print("Satu");
-              await firestore.collection("Admin").doc(bukaan["iddoc"]).update({
-                "tanggal": now.toIso8601String(),
-                "keluar": {
-                  "date": now.toIso8601String(),
-                  "latitude": position.latitude,
-                  "longitude": position.longitude,
-                  "status": "Lebih Awal"
-                }
-              });
-            }
-          }
-        }
-      } else {
-        // absen masuk
+      if (cek.docs.isEmpty) {
+        //belum pernah absen dan set absen masuk
         if (convertnow >= convert) {
           print("Anda Terlambat");
           var absen = await firestore
@@ -288,8 +117,8 @@ class ClientController extends GetxController {
               .set({
             "tanggal": now.toIso8601String(),
             "nama": nama,
-            "role": statusjabatananda,
             "nomor": nomor,
+            "role": statusjabatananda,
             "nim": nim,
             "email": email,
             "idclient": uid,
@@ -302,14 +131,14 @@ class ClientController extends GetxController {
             }
           });
           var idadmin = await firestore.collection("Admin").add({
+            "nama": nama,
+            "nomor": nomor,
+            "role": statusjabatananda,
+            "email": email,
+            "nim": nim,
             "tanggal": now.toIso8601String(),
             "idclient": uid,
-            "nomor": nomor,
             "waktu": datenow,
-            "nim": nim,
-            "role": statusjabatananda,
-            "nama": nama,
-            "email": email,
             "masuk": {
               "date": now.toIso8601String(),
               "latitude": position.latitude,
@@ -330,14 +159,14 @@ class ClientController extends GetxController {
               .collection("Presensi")
               .doc(datenow)
               .set({
-            "tanggal": now.toIso8601String(),
-            "idclient": uid,
+            "nama": nama,
+            "nomor": nomor,
             "role": statusjabatananda,
             "nim": nim,
-            "nomor": nomor,
-            "waktu": datenow,
-            "nama": nama,
             "email": email,
+            "tanggal": now.toIso8601String(),
+            "idclient": uid,
+            "waktu": datenow,
             "masuk": {
               "date": now.toIso8601String(),
               "latitude": position.latitude,
@@ -346,14 +175,14 @@ class ClientController extends GetxController {
             }
           });
           var idadmin = await firestore.collection("Admin").add({
+            "nama": nama,
+            "nomor": nomor,
+            "email": email,
+            "nim": nim,
+            "role": statusjabatananda,
             "tanggal": now.toIso8601String(),
             "idclient": uid,
             "waktu": datenow,
-            "nomor": nomor,
-            "role": statusjabatananda,
-            "nim": nim,
-            "nama": nama,
-            "email": email,
             "masuk": {
               "date": now.toIso8601String(),
               "latitude": position.latitude,
@@ -366,6 +195,249 @@ class ClientController extends GetxController {
               .collection("Admin")
               .doc(idadmin.id)
               .update({"iddoc": idadmin.id});
+        }
+      } else {
+        print("Masuk Ke Else");
+        print(datenow);
+        DocumentSnapshot<Map<String, dynamic>> todayDocid = await firestore
+            .collection("Pengguna")
+            .doc(uid)
+            .collection("Presensi")
+            .doc(datenow)
+            .get();
+        print(todayDocid.exists);
+        if (todayDocid.exists == true) {
+          //tinggal absen keluar // sudah absen masuk dan keluar
+          Map<String, dynamic>? dataMapToday = todayDocid.data();
+          if (dataMapToday?["keluar"] != null) {
+            //sudah absen masuk dan keluar
+            Get.snackbar("Informasi", "Sudah Absen Masuk Dan Keluar");
+          } else {
+            // harus absen keluar
+            if (convertnow >= convertnw) {
+              print("INI CONVERT NOW ${convertnow}");
+              print("INI CONVERT NW ${convertnw}");
+              print("Absen Keluar Selesai");
+              await firestore
+                  .collection("Pengguna")
+                  .doc(uid)
+                  .collection("Presensi")
+                  .doc(datenow)
+                  .update({
+                "tanggal": now.toIso8601String(),
+                "Status": "Hadir",
+                "keluar": {
+                  "date": now.toIso8601String(),
+                  "latitude": position.latitude,
+                  "longitude": position.longitude,
+                  "status": "Sudah Absen"
+                }
+              });
+
+              final rekap =
+                  await firestore.collection("rekapan").doc(datenow).get();
+
+              if (rekap.data() == null) {
+                //
+                await firestore.collection("rekapan").doc(datenow).set({
+                  "Hadir": 1,
+                  "Waktu": datenow,
+                  "Sakit": 0,
+                  "Izin": 0,
+                  "Tidak Hadir": 34,
+                  "tanggal": DateTime.now().toIso8601String()
+                });
+              } else {
+                var ambiljmlhadir =
+                    await firestore.collection("rekapan").doc(datenow).get();
+                print(
+                    "INI AMBIL JUMLAH KEHADIRAN:${ambiljmlhadir.data()?["Hadir"]}");
+                await firestore.collection("rekapan").doc(datenow).update({
+                  "Hadir": ambiljmlhadir.data()!["Hadir"] + 1,
+                  "Tidak Hadir": ambiljmlhadir.data()!["Tidak Hadir"] - 1
+                });
+              }
+
+              print("INI REKAP : ${rekap.data()}");
+
+              var get = await firestore
+                  .collection("Admin")
+                  .where("idclient", isEqualTo: uid)
+                  .where("waktu", isEqualTo: datenow)
+                  .get();
+              print("ADA NGGAK ${get.docs.length}");
+              var bukaan = get.docs[0].data();
+              if (get.docs.length == 1) {
+                print("Satu");
+                await firestore
+                    .collection("Admin")
+                    .doc(bukaan["iddoc"])
+                    .update({
+                  "tanggal": now.toIso8601String(),
+                  "keluar": {
+                    "date": now.toIso8601String(),
+                    "latitude": position.latitude,
+                    "longitude": position.longitude,
+                    "status": "Sudah Absen"
+                  }
+                });
+              }
+            } else {
+              print("Absen Keluar Lebih Awal");
+              await firestore
+                  .collection("Pengguna")
+                  .doc(uid)
+                  .collection("Presensi")
+                  .doc(datenow)
+                  .update({
+                "Status": "Hadir",
+                "tanggal": now.toIso8601String(),
+                "keluar": {
+                  "date": now.toIso8601String(),
+                  "latitude": position.latitude,
+                  "longitude": position.longitude,
+                  "status": "Lebih Awal"
+                }
+              });
+              final rekap =
+                  await firestore.collection("rekapan").doc(datenow).get();
+
+              if (rekap.data() == null) {
+                //
+                await firestore.collection("rekapan").doc(datenow).set({
+                  "Hadir": 1,
+                  "Waktu": datenow,
+                  "Sakit": 0,
+                  "Izin": 0,
+                  "Tidak Hadir": 34,
+                  "tanggal": DateTime.now().toIso8601String()
+                });
+              } else {
+                var ambiljmlhadir =
+                    await firestore.collection("rekapan").doc(datenow).get();
+                print(
+                    "INI AMBIL JUMLAH KEHADIRAN:${ambiljmlhadir.data()?["Hadir"]}");
+                await firestore.collection("rekapan").doc(datenow).update({
+                  "Hadir": ambiljmlhadir.data()!["Hadir"] + 1,
+                  "Tidak Hadir": ambiljmlhadir.data()!["Tidak Hadir"] - 1
+                });
+              }
+              print("INI REKAP : ${rekap.data()}");
+              var get = await firestore
+                  .collection("Admin")
+                  .where("idclient", isEqualTo: uid)
+                  .where("waktu", isEqualTo: datenow)
+                  .get();
+              print("ADA NGGAK ${get.docs.length}");
+              var bukaan = get.docs[0].data();
+              if (get.docs.length == 1) {
+                print("Satu");
+                await firestore
+                    .collection("Admin")
+                    .doc(bukaan["iddoc"])
+                    .update({
+                  "tanggal": now.toIso8601String(),
+                  "keluar": {
+                    "date": now.toIso8601String(),
+                    "latitude": position.latitude,
+                    "longitude": position.longitude,
+                    "status": "Lebih Awal"
+                  }
+                });
+              }
+            }
+          }
+        } else {
+          // absen masuk
+          if (convertnow >= convert) {
+            print("Anda Terlambat");
+            var absen = await firestore
+                .collection("Pengguna")
+                .doc(uid)
+                .collection("Presensi")
+                .doc(datenow)
+                .set({
+              "tanggal": now.toIso8601String(),
+              "nama": nama,
+              "role": statusjabatananda,
+              "nomor": nomor,
+              "nim": nim,
+              "email": email,
+              "idclient": uid,
+              "waktu": datenow,
+              "masuk": {
+                "date": now.toIso8601String(),
+                "latitude": position.latitude,
+                "longitude": position.longitude,
+                "status": "Terlambat Masuk"
+              }
+            });
+            var idadmin = await firestore.collection("Admin").add({
+              "tanggal": now.toIso8601String(),
+              "idclient": uid,
+              "nomor": nomor,
+              "waktu": datenow,
+              "nim": nim,
+              "role": statusjabatananda,
+              "nama": nama,
+              "email": email,
+              "masuk": {
+                "date": now.toIso8601String(),
+                "latitude": position.latitude,
+                "longitude": position.longitude,
+                "status": "Terlambat Masuk"
+              }
+            });
+
+            await firestore
+                .collection("Admin")
+                .doc(idadmin.id)
+                .update({"iddoc": idadmin.id});
+          } else {
+            print("ANDA ABSEN MASUK LEBIH AWAL");
+            var absen = await firestore
+                .collection("Pengguna")
+                .doc(uid)
+                .collection("Presensi")
+                .doc(datenow)
+                .set({
+              "tanggal": now.toIso8601String(),
+              "idclient": uid,
+              "role": statusjabatananda,
+              "nim": nim,
+              "nomor": nomor,
+              "waktu": datenow,
+              "nama": nama,
+              "email": email,
+              "masuk": {
+                "date": now.toIso8601String(),
+                "latitude": position.latitude,
+                "longitude": position.longitude,
+                "status": "Lebih Awal"
+              }
+            });
+            var idadmin = await firestore.collection("Admin").add({
+              "tanggal": now.toIso8601String(),
+              "idclient": uid,
+              "waktu": datenow,
+              "nomor": nomor,
+              "role": statusjabatananda,
+              "nim": nim,
+              "nama": nama,
+              "email": email,
+              "masuk": {
+                "date": now.toIso8601String(),
+                "latitude": position.latitude,
+                "longitude": position.longitude,
+                "status": "Lebih Awal"
+              }
+            });
+
+            await firestore
+                .collection("Admin")
+                .doc(idadmin.id)
+                .update({"iddoc": idadmin.id});
+          }
         }
       }
     }

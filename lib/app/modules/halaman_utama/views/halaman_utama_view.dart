@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -16,62 +17,72 @@ class HalamanUtamaView extends GetView<HalamanUtamaController> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Colors.white,
-        drawer: Drawer(
-          child: ListView(
-            children: [
-              DrawerHeader(
-                  decoration: BoxDecoration(color: Colors.grey.shade400),
-                  child: Row(
+        drawer: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+            future: controller.dataUser(),
+            builder: (context, snapshot) {
+              print(snapshot.connectionState);
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else {
+                return Drawer(
+                  child: ListView(
                     children: [
-                      CircleAvatar(
-                        minRadius: 20,
-                        maxRadius: 40,
-                        child: Image.asset("images/noimage.png"),
+                      DrawerHeader(
+                          decoration:
+                              BoxDecoration(color: Colors.grey.shade400),
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                minRadius: 20,
+                                maxRadius: 40,
+                                child: Image.asset("images/noimage.png"),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    snapshot.data?.data()!["nama"],
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    snapshot.data?.data()!["nim"],
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black),
+                                  )
+                                ],
+                              )
+                            ],
+                          )),
+                      ListTile(
+                        onTap: () {
+                          Get.toNamed(Routes.PROFILE);
+                        },
+                        leading: const Icon(Icons.person),
+                        title: const Text("Profile Page"),
                       ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Faiz Amsyari Rustam",
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            "1102210012",
-                            style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                color: Colors.black),
-                          )
-                        ],
+                      ListTile(
+                        onTap: () {
+                          Get.toNamed(Routes.CLIENT);
+                        },
+                        leading: const Icon(Icons.qr_code),
+                        title: const Text("Presence"),
                       )
                     ],
-                  )),
-              ListTile(
-                onTap: () {
-                  Get.toNamed(Routes.PROFILE);
-                },
-                leading: const Icon(Icons.person),
-                title: const Text("Profile Page"),
-              ),
-              ListTile(
-                onTap: () {
-                  Get.toNamed(Routes.CLIENT);
-                },
-                leading: const Icon(Icons.qr_code),
-                title: const Text("Presence"),
-              )
-            ],
-          ),
-        ),
+                  ),
+                );
+              }
+            }),
         body: ListView(
           padding: EdgeInsets.symmetric(horizontal: lebar / 20),
           children: [
@@ -123,39 +134,47 @@ class HalamanUtamaView extends GetView<HalamanUtamaController> {
                   SizedBox(
                     width: lebar / 15,
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Selamat Datang !!",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Colors.black),
-                      ),
-                      SizedBox(
-                        height: tinggi / 100,
-                      ),
-                      const Text(
-                        "Faiz Amsyari Rustam",
-                        style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 16,
-                            color: Colors.black),
-                      ),
-                      SizedBox(
-                        height: tinggi / 100,
-                      ),
-                      const Text(
-                        "1102210012",
-                        style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 16,
-                            color: Colors.black),
-                      )
-                    ],
-                  )
+                  StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                      stream: controller.data(),
+                      builder: (context, sn) {
+                        if (sn.connectionState == ConnectionState.active) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Selamat Datang !!",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    color: Colors.black),
+                              ),
+                              SizedBox(
+                                height: tinggi / 100,
+                              ),
+                              Text(
+                                sn.data!.data()!["nama"],
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 16,
+                                    color: Colors.black),
+                              ),
+                              SizedBox(
+                                height: tinggi / 100,
+                              ),
+                              Text(
+                                sn.data!.data()!["nim"],
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 16,
+                                    color: Colors.black),
+                              )
+                            ],
+                          );
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      })
                 ],
               ),
             ),

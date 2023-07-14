@@ -449,34 +449,34 @@ class ClientView extends GetView<ClientController> {
             ],
           ),
 
-          // onPressed: () {
-          //   controller.ambilLocation(
-          //       lempar["nama"],
-          //       lempar["nomorkelompok"].toString(),
-          //       lempar["email"],
-          //       lempar["role"],
-          //       lempar["nim"]);
-          // },
-
-          onPressed: () async {
-            String responQr = await FlutterBarcodeScanner.scanBarcode(
-                "#000000", "Kembali", true, ScanMode.QR);
-            print(responQr);
-
-            if (responQr == "ospekjurusanteknikkomputer") {
-              // Get.snackbar("Selamat", "Absensi Telah Berhasil");
-              await controller.ambilLocation(
+          onPressed: () {
+            controller.ambilLocation(
                 lempar["nama"],
                 lempar["nomorkelompok"].toString(),
-                lempar["nim"],
                 lempar["email"],
                 lempar["role"],
-              );
-            } else {
-              Get.snackbar(
-                  "Terjadi Kesalahan", "Kode Qr Salah / Gagal Absensi");
-            }
+                lempar["nim"]);
           },
+
+          // onPressed: () async {
+          //   String responQr = await FlutterBarcodeScanner.scanBarcode(
+          //       "#000000", "Kembali", true, ScanMode.QR);
+          //   print(responQr);
+
+          //   if (responQr == "ospekjurusanteknikkomputer") {
+          //     // Get.snackbar("Selamat", "Absensi Telah Berhasil");
+          //     await controller.ambilLocation(
+          //       lempar["nama"],
+          //       lempar["nomorkelompok"].toString(),
+          //       lempar["nim"],
+          //       lempar["email"],
+          //       lempar["role"],
+          //     );
+          //   } else {
+          //     Get.snackbar(
+          //         "Terjadi Kesalahan", "Kode Qr Salah / Gagal Absensi");
+          //   }
+          // },
         ),
       ),
     );

@@ -4,11 +4,12 @@ import 'package:get/get.dart';
 class ReadPresenceController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> streamTagihan(String uid) async* {
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamTagihan(
+      Map<String, dynamic> uid) async* {
     print(uid);
     yield* firestore
         .collection("Pengguna")
-        .doc(uid)
+        .doc(uid["id"])
         .collection("Presensi")
         .snapshots();
   }

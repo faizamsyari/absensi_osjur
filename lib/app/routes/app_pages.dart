@@ -8,6 +8,10 @@ import '../modules/blank_pagee/bindings/blank_pagee_binding.dart';
 import '../modules/blank_pagee/views/blank_pagee_view.dart';
 import '../modules/bottom_nav/bindings/bottom_nav_binding.dart';
 import '../modules/bottom_nav/views/bottom_nav_view.dart';
+import '../modules/chart/bindings/chart_binding.dart';
+import '../modules/chart/views/chart_view.dart';
+import '../modules/chooseperizinan/bindings/chooseperizinan_binding.dart';
+import '../modules/chooseperizinan/views/chooseperizinan_view.dart';
 import '../modules/client/bindings/client_binding.dart';
 import '../modules/client/views/client_view.dart';
 import '../modules/detail_admin/bindings/detail_admin_binding.dart';
@@ -18,6 +22,8 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
+import '../modules/perizinan/bindings/perizinan_binding.dart';
+import '../modules/perizinan/views/perizinan_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/read_presence/bindings/read_presence_binding.dart';
@@ -85,6 +91,21 @@ class AppPages {
       name: _Paths.PROFILE,
       page: () => const ProfileView(),
       binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.PERIZINAN,
+      page: () => const PerizinanView(),
+      binding: PerizinanBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHOOSEPERIZINAN,
+      page: () => const ChooseperizinanView(),
+      binding: ChooseperizinanBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHART,
+      page: () => const ChartView(),
+      binding: ChartBinding(),
     ),
   ];
 }
