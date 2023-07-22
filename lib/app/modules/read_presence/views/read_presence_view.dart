@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_unnecessary_containers, unnecessary_string_interpolations
 
+import 'package:absensi_osjur/app/routes/app_pages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +11,7 @@ import '../controllers/read_presence_controller.dart';
 
 class ReadPresenceView extends GetView<ReadPresenceController> {
   const ReadPresenceView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final lebar = MediaQuery.of(context).size.width;
@@ -64,6 +66,7 @@ class ReadPresenceView extends GetView<ReadPresenceController> {
                     itemBuilder: (context, index) {
                       Map<String, dynamic>? data =
                           snapshot.data?.docs[index].data();
+                      String? datatgl = snapshot.data?.docs[index].id;
                       return Container(
                         padding: EdgeInsets.symmetric(
                             vertical: tinggi / 40, horizontal: lebar / 20),
@@ -132,14 +135,73 @@ class ReadPresenceView extends GetView<ReadPresenceController> {
                                   fontSize: 14),
                             ),
                             SizedBox(
-                              height: tinggi / 70,
+                              height: tinggi / 80,
                             ),
-                            const Text(
-                              "Status Absensi Masuk",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  fontSize: 14),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Status Absensi Masuk",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                      fontSize: 14),
+                                ),
+                                Container(
+                                  width: lebar / 3,
+                                  // color: Colors.amber,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          Get.toNamed(Routes.EDIT_DATA,
+                                              arguments: {
+                                                "tgl": datatgl,
+                                                "uid": argument["id"],
+                                                "status": data?["Status"]
+                                              });
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: lebar / 60,
+                                              vertical: tinggi / 60),
+                                          decoration: BoxDecoration(
+                                              color: Colors.orange.shade700,
+                                              shape: BoxShape.circle),
+                                          child: const Icon(
+                                            Icons.edit,
+                                            color: Colors.white,
+                                            size: 25,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: lebar / 30,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () async {
+                                          controller.deletePresence(
+                                              argument["id"], datatgl);
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: lebar / 60,
+                                              vertical: tinggi / 60),
+                                          decoration: BoxDecoration(
+                                              color: Colors.red.shade700,
+                                              shape: BoxShape.circle),
+                                          child: const Icon(
+                                            Icons.delete,
+                                            color: Colors.white,
+                                            size: 25,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
                             ),
                             SizedBox(
                               height: tinggi / 80,

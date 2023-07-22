@@ -15,6 +15,7 @@ import 'package:pdf/widgets.dart ' as pw;
 class HomeController extends GetxController {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  RxBool loadingabsen = false.obs;
   void logout() async {
     await auth.signOut();
   }
@@ -270,6 +271,8 @@ class HomeController extends GetxController {
   Future<void> downloadexcel() async {
     print("PROSES DOWNLOAD EXCEL");
 
+    loadingabsen.value = true;
+
     //get data firestore
     var data = await firestore
         .collection("Admin")
@@ -342,5 +345,6 @@ class HomeController extends GetxController {
     print("Fungsi Test Selesai");
     Get.snackbar("Selamat",
         "Data Berhasil Disimpan Di Google Spreadsheet, Segera Buka Spreadsheet Anda Untuk Melihat Data");
+    loadingabsen.value = false;
   }
 }

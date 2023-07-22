@@ -42,9 +42,11 @@ class PerizinanController extends GetxController {
     );
   }
 
-  void kirimData(String id) async {
+  void kirimData(String id, DateTime? ini) async {
     DateTime tgl = DateTime.now();
-    String datenow = DateFormat.yMd().format(tgl).replaceAll("/", "-");
+    String datenow = ini == null
+        ? DateFormat.yMd().format(tgl).replaceAll("/", "-")
+        : DateFormat.yMd().format(ini).replaceAll("/", "-");
     print(role?.value);
     if (role?.value == "a") {
       print("Data Kosong");
@@ -128,43 +130,59 @@ class PerizinanController extends GetxController {
               .doc(id)
               .collection("Presensi")
               .doc(datenow)
-              .set({"Status": role!.value});
+              .set({"Status": role!.value, "tanggal": ini?.toIso8601String()});
           var cek = await firestore.collection("rekapan").doc(datenow).get();
+          var cek2 = await firestore
+              .collection("Pengguna")
+              .doc(id)
+              .collection("Presensi")
+              .doc(datenow)
+              .get();
           if (cek.exists) {
             if (role?.value == "Sakit") {
               if (cek.data()?["Sakit"] != null) {
-                await firestore
-                    .collection("rekapan")
-                    .doc(datenow)
-                    .update({"Sakit": cek.data()?["Sakit"] + 1});
+                await firestore.collection("rekapan").doc(datenow).update({
+                  "Sakit": cek.data()?["Sakit"] + 1,
+                  "Tidak Hadir": cek.data()!["Tidak Hadir"] - 1
+                });
               } else {
-                await firestore
-                    .collection("rekapan")
-                    .doc(datenow)
-                    .update({"Sakit": 1});
+                await firestore.collection("rekapan").doc(datenow).update({
+                  "Sakit": 1,
+                  "Tidak Hadir": cek.data()!["Tidak Hadir"] - 1
+                });
               }
             } else {
               if (cek.data()?["Izin"] != null) {
-                await firestore
-                    .collection("rekapan")
-                    .doc(datenow)
-                    .update({"Izin": cek.data()?["Izin"] + 1});
+                await firestore.collection("rekapan").doc(datenow).update({
+                  "Izin": cek.data()?["Izin"] + 1,
+                  "Tidak Hadir": cek.data()!["Tidak Hadir"] - 1
+                });
               } else {
-                await firestore
-                    .collection("rekapan")
-                    .doc(datenow)
-                    .update({"Izin": 1});
+                await firestore.collection("rekapan").doc(datenow).update(
+                    {"Izin": 1, "Tidak Hadir": cek.data()!["Tidak Hadir"] - 1});
               }
             }
           } else {
-            await firestore.collection("rekapan").doc(datenow).set({
-              "Sakit": 0,
-              "Izin": 0,
-              "Hadir": 0,
-              "Tidak Hadir": 35,
-              "Waktu": datenow,
-              "tanggal": DateTime.now().toIso8601String()
-            });
+            var user = cek2.data()?["Status"];
+            if (user == "Izin") {
+              await firestore.collection("rekapan").doc(datenow).set({
+                "Sakit": 0,
+                "Izin": 1,
+                "Hadir": 0,
+                "Tidak Hadir": 34,
+                "Waktu": datenow,
+                "tanggal": ini?.toIso8601String()
+              });
+            } else {
+              await firestore.collection("rekapan").doc(datenow).set({
+                "Sakit": 1,
+                "Izin": 0,
+                "Hadir": 0,
+                "Tidak Hadir": 34,
+                "Waktu": datenow,
+                "tanggal": ini?.toIso8601String()
+              });
+            }
           }
 
           Get.snackbar("Selamat", "Perizinan Telah Dibuat");

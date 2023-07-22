@@ -5,12 +5,21 @@ class ReadPresenceController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Stream<QuerySnapshot<Map<String, dynamic>>> streamTagihan(
-      Map<String, dynamic> uid) async* {
+      Map<String, dynamic>? uid) async* {
     print(uid);
     yield* firestore
         .collection("Pengguna")
-        .doc(uid["id"])
+        .doc(uid?["id"])
         .collection("Presensi")
         .snapshots();
+  }
+
+  void deletePresence(Map<String, dynamic> uid, String? tgl) {
+    firestore
+        .collection("Pengguna")
+        .doc(uid["id"])
+        .collection("Presensi")
+        .doc(tgl)
+        .delete();
   }
 }

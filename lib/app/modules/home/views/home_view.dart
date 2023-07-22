@@ -54,7 +54,9 @@ class HomeView extends GetView<HomeController> {
 
                     break;
                   case 3:
-                    title = "Simpan Di Spreadsheet";
+                    title = controller.loadingabsen.value == true
+                        ? "Loading..."
+                        : "Simpan Di Spreadsheet";
                     icon = Icons.edit_document;
 
                     break;
@@ -78,7 +80,8 @@ class HomeView extends GetView<HomeController> {
                         Get.toNamed(Routes.DETAIL_ADMIN);
                       } else if (index == 2) {
                         controller.downloadPdf();
-                      } else if (index == 3) {
+                      } else if (index == 3 &&
+                          controller.loadingabsen.value == false) {
                         controller.downloadexcel();
                       } else if (index == 4) {
                         Get.toNamed(Routes.CHART);
@@ -100,7 +103,11 @@ class HomeView extends GetView<HomeController> {
                           SizedBox(
                             height: tinggi / 50,
                           ),
-                          Text(title)
+                          Obx(() {
+                            return controller.loadingabsen.value == true
+                                ? Text("Loading...")
+                                : Text(title);
+                          })
                         ],
                       ),
                     ),

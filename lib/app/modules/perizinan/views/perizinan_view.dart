@@ -11,6 +11,7 @@ class PerizinanView extends GetView<PerizinanController> {
   Widget build(BuildContext context) {
     final lebar = MediaQuery.of(context).size.width;
     final tinggi = MediaQuery.of(context).size.height;
+    DateTime? halo;
     var obsecure = true.obs;
     final argument = Get.arguments;
     print("INI ARGUMENT PERIZINAN ${argument}");
@@ -82,7 +83,11 @@ class PerizinanView extends GetView<PerizinanController> {
                                   firstDate: DateTime(2000),
                                   lastDate: DateTime(2045))
                               .then((value) {
-                            print(value);
+                            print("INI VALUE : ${value}");
+                            print("HALO SEBELUM ${halo}");
+
+                            halo = value;
+                            print("HALO SESUDAH ${halo}");
                             if (value != null) {
                               tanggal.value = value;
                             }
@@ -122,7 +127,7 @@ class PerizinanView extends GetView<PerizinanController> {
                   fixedSize:
                       MaterialStateProperty.all(Size(lebar, tinggi / 15))),
               onPressed: () {
-                controller.kirimData(argument["id"]);
+                controller.kirimData(argument["id"], halo);
               },
               child: const Text(
                 "Masukkan Data",

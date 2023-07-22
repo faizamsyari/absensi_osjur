@@ -16,6 +16,8 @@ import '../modules/client/bindings/client_binding.dart';
 import '../modules/client/views/client_view.dart';
 import '../modules/detail_admin/bindings/detail_admin_binding.dart';
 import '../modules/detail_admin/views/detail_admin_view.dart';
+import '../modules/edit_data/bindings/edit_data_binding.dart';
+import '../modules/edit_data/views/edit_data_view.dart';
 import '../modules/halaman_utama/bindings/halaman_utama_binding.dart';
 import '../modules/halaman_utama/views/halaman_utama_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -106,6 +108,11 @@ class AppPages {
       name: _Paths.CHART,
       page: () => const ChartView(),
       binding: ChartBinding(),
+    ),
+    GetPage(
+      name: _Paths.EDIT_DATA,
+      page: () => const EditDataView(),
+      binding: EditDataBinding(),
     ),
   ];
 }

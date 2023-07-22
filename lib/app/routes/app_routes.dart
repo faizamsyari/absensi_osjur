@@ -17,6 +17,7 @@ abstract class Routes {
   static const PERIZINAN = _Paths.PERIZINAN;
   static const CHOOSEPERIZINAN = _Paths.CHOOSEPERIZINAN;
   static const CHART = _Paths.CHART;
+  static const EDIT_DATA = _Paths.EDIT_DATA;
 }
 
 abstract class _Paths {
@@ -35,4 +36,5 @@ abstract class _Paths {
   static const PERIZINAN = '/perizinan';
   static const CHOOSEPERIZINAN = '/chooseperizinan';
   static const CHART = '/chart';
+  static const EDIT_DATA = '/edit-data';
 }
