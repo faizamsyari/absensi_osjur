@@ -84,12 +84,14 @@ class PerizinanView extends GetView<PerizinanController> {
                                   lastDate: DateTime(2045))
                               .then((value) {
                             print("INI VALUE : ${value}");
-                            print("HALO SEBELUM ${halo}");
+                            // print("HALO SEBELUM ${halo}");
 
-                            halo = value;
-                            print("HALO SESUDAH ${halo}");
+                            // halo = value;
+                            // print("HALO SESUDAH ${halo}");
                             if (value != null) {
                               tanggal.value = value;
+                            } else {
+                              //
                             }
                           });
                         },
@@ -127,7 +129,7 @@ class PerizinanView extends GetView<PerizinanController> {
                   fixedSize:
                       MaterialStateProperty.all(Size(lebar, tinggi / 15))),
               onPressed: () {
-                controller.kirimData(argument["id"], halo);
+                controller.kirimData(argument["id"], tanggal.value);
               },
               child: const Text(
                 "Masukkan Data",

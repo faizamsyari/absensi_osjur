@@ -56,8 +56,8 @@ class AllDataView extends GetView<AllDataController> {
                                     fontSize: 14),
                               ),
                               Text(
-                                data?["masuk"]?["date"] == null
-                                    ? "-"
+                                data?["masuk"] == null
+                                    ? "${DateFormat.yMMMEd().format(DateTime.parse(data!["tanggal"]))}"
                                     : "${DateFormat.yMMMEd().format(DateTime.parse(data!["masuk"]["date"]))}",
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -70,7 +70,9 @@ class AllDataView extends GetView<AllDataController> {
                             height: tinggi / 80,
                           ),
                           Text(
-                            "${DateFormat.jms().format(DateTime.parse(data?["masuk"]!["date"]))}",
+                            data["masuk"] == null
+                                ? "-"
+                                : "${DateFormat.jms().format(DateTime.parse(data["masuk"]!["date"]))}",
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
@@ -90,9 +92,9 @@ class AllDataView extends GetView<AllDataController> {
                             height: tinggi / 80,
                           ),
                           Text(
-                            data?["keluar"]?["date"] == null
+                            data["keluar"] == null
                                 ? "-"
-                                : "${DateFormat.jms().format(DateTime.parse(data!["keluar"]!["date"]))}",
+                                : "${DateFormat.jms().format(DateTime.parse(data["keluar"]!["date"]))}",
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
@@ -112,9 +114,9 @@ class AllDataView extends GetView<AllDataController> {
                             height: tinggi / 80,
                           ),
                           Text(
-                            data?["masuk"] == null
+                            data["masuk"] == null
                                 ? "-"
-                                : "${data?["masuk"]["status"]}",
+                                : "${data["masuk"]["status"]}",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
@@ -134,14 +136,34 @@ class AllDataView extends GetView<AllDataController> {
                             height: tinggi / 80,
                           ),
                           Text(
-                            data?["keluar"] == null
+                            data["keluar"] == null
                                 ? "-"
-                                : "${data?["keluar"]["status"]}",
+                                : "${data["keluar"]["status"]}",
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                                 fontSize: 14),
-                          )
+                          ),
+                          SizedBox(
+                            height: tinggi / 70,
+                          ),
+                          const Text(
+                            "Status Kehadiran",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                fontSize: 14),
+                          ),
+                          SizedBox(
+                            height: tinggi / 80,
+                          ),
+                          Text(
+                            data["Status"] == null ? "-" : "${data["Status"]}",
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                fontSize: 14),
+                          ),
                         ],
                       ),
                     );

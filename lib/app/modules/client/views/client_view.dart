@@ -22,10 +22,11 @@ class ClientView extends GetView<ClientController> {
           padding: EdgeInsets.symmetric(
               horizontal: lebar / 20, vertical: tinggi / 20),
           children: [
-            StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                stream: controller.dataUser(),
+            FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                future: controller.dataUser(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
+                    print(snapshot.connectionState);
                     return const CircularProgressIndicator();
                   } else {
                     Map<String, dynamic> datauser = snapshot.data!.data()!;
@@ -294,7 +295,7 @@ class ClientView extends GetView<ClientController> {
               height: tinggi / 30,
             ),
             StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: controller.getLastPresence(),
+                stream: controller.getLastPresence().asBroadcastStream(),
                 builder: (context, snappresence) {
                   if (snappresence.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();
@@ -331,8 +332,8 @@ class ClientView extends GetView<ClientController> {
                                           fontSize: 14),
                                     ),
                                     Text(
-                                      data["masuk"]?["date"] == null
-                                          ? "-"
+                                      data["masuk"] == null
+                                          ? "${DateFormat.yMMMEd().format(DateTime.parse(data["tanggal"]))}"
                                           : "${DateFormat.yMMMEd().format(DateTime.parse(data["masuk"]["date"]))}",
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold,
@@ -345,7 +346,9 @@ class ClientView extends GetView<ClientController> {
                                   height: tinggi / 80,
                                 ),
                                 Text(
-                                  "${DateFormat.jms().format(DateTime.parse(data["masuk"]!["date"]))}",
+                                  data["masuk"] != null
+                                      ? "${DateFormat.jms().format(DateTime.parse(data["masuk"]!["date"]))}"
+                                      : "-",
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
@@ -365,7 +368,7 @@ class ClientView extends GetView<ClientController> {
                                   height: tinggi / 80,
                                 ),
                                 Text(
-                                  data["keluar"]?["date"] == null
+                                  data["keluar"] == null
                                       ? "-"
                                       : "${DateFormat.jms().format(DateTime.parse(data["keluar"]!["date"]))}",
                                   style: const TextStyle(
@@ -387,7 +390,9 @@ class ClientView extends GetView<ClientController> {
                                   height: tinggi / 80,
                                 ),
                                 Text(
-                                  "${data["masuk"]["status"]}",
+                                  data["masuk"] != null
+                                      ? "${data["masuk"]["status"]}"
+                                      : "-",
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
@@ -407,14 +412,36 @@ class ClientView extends GetView<ClientController> {
                                   height: tinggi / 80,
                                 ),
                                 Text(
-                                  data["keluar"]?["date"] == null
+                                  data["keluar"] == null
                                       ? "-"
                                       : "${data["keluar"]["status"]}",
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
                                       fontSize: 14),
-                                )
+                                ),
+                                SizedBox(
+                                  height: tinggi / 70,
+                                ),
+                                const Text(
+                                  "Status Kehadiran",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                      fontSize: 14),
+                                ),
+                                SizedBox(
+                                  height: tinggi / 80,
+                                ),
+                                Text(
+                                  data["Status"] == null
+                                      ? "-"
+                                      : "${data["Status"]}",
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                      fontSize: 14),
+                                ),
                               ],
                             ),
                           );

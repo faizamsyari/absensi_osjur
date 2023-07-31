@@ -514,10 +514,10 @@ class ClientController extends GetxController {
         .snapshots();
   }
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>> dataUser() async* {
+  Future<DocumentSnapshot<Map<String, dynamic>>> dataUser() async {
     String uid = auth.currentUser!.uid;
 
-    yield* firestore.collection("Pengguna").doc(uid).snapshots();
+    return firestore.collection("Pengguna").doc(uid).get();
   }
 
   Stream<DocumentSnapshot<Map<String, dynamic>>> today() async* {

@@ -44,6 +44,8 @@ class PerizinanController extends GetxController {
 
   void kirimData(String id, DateTime? ini) async {
     DateTime tgl = DateTime.now();
+    print("INI TGL = ${tgl}");
+    print("INI ini = ${ini}");
     String datenow = ini == null
         ? DateFormat.yMd().format(tgl).replaceAll("/", "-")
         : DateFormat.yMd().format(ini).replaceAll("/", "-");
